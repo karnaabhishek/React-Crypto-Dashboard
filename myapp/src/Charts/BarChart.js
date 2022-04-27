@@ -18,6 +18,7 @@ ChartJS.register(
     Tooltip,
     Legend
   );
+
 const options = {
     indexAxis: 'x',
     elements: {
@@ -36,7 +37,15 @@ const options = {
       },
     },
   };
-
+  
+function myFunction(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") === -1) {
+      x.className += " w3-show";
+    } else { 
+      x.className = x.className.replace(" w3-show", "");
+    }
+  }
 const Horizontalchart =() => {
     const [data, setData] = useState({
         labels:[],
@@ -44,19 +53,21 @@ const Horizontalchart =() => {
           {
             label: [],
             data:[],
+            code: [],
+            symbol: [],
+            description: [],
             borderColor: [],
             backgroundColor: [],
           },
           
         ],
       });
+      
+    
     useEffect(()=> {
+       
        const fetchData= async()=> {
            const url = 'https://api.coindesk.com/v1/bpi/currentprice.json'
-           
-           const dataSet1 = [];
-           const dataSet2 = [];
-           const dataSet3 = []; 
 
          await fetch(url).then((data)=> {
              console.log("Api data", data)
@@ -64,11 +75,19 @@ const Horizontalchart =() => {
              return res
          }).then((res) => {
              console.log("ressss", res)
-             dataSet1.push(res.bpi.USD.rate_float)
-             dataSet2.push(res.bpi.GBP.rate_float)
-             dataSet3.push(res.bpi.EUR.rate_float)
-             
-             var keys=Object.keys(res.bpi);
+             const dataSet1=res.bpi.USD.rate_float
+             const dataSet2=res.bpi.GBP.rate_float
+             const dataSet3=res.bpi.EUR.rate_float
+             const code1=res.bpi.USD.code
+             const code2=res.bpi.GBP.code
+             const code3=res.bpi.EUR.code
+             const symbol1=res.bpi.USD.symbol
+             const symbol2=res.bpi.GBP.symbol
+             const symbol3=res.bpi.EUR.symbol
+             const description1=res.bpi.USD.description
+             const description2=res.bpi.GBP.description
+             const description3=res.bpi.EUR.description
+             const keys=Object.keys(res.bpi);
              
             setData({
                 labels: keys,
@@ -76,34 +95,97 @@ const Horizontalchart =() => {
                   {
                     label: "Dataset",
                     data:[dataSet1, dataSet2, dataSet3],
+                    code:[code1, code2, code3],
+                    symbol: [symbol1, symbol2, symbol3],
+                    description: [description1, description2, description3],
                     borderColor: 'rgb(255, 99, 132)', 
                     backgroundColor: 'rgb(255, 99, 132)',
+                    
                   },
                   
                 ],
               })
-            console.log("arrData", dataSet1, dataSet2, dataSet3)
          }).catch(e => {
                 console.log("error", e)
             })
         }
-        
         fetchData();
+        setInterval(() => {
+          fetchData();
+        }, 10000);
+        
     },[])
    
     return(
-        <div style={{width:'80%', height:'50%'}}>
+        <div>
+          <div style={{width:'50%', height:'100%', margin: 'auto'}}>
+            
             <Bar data={data} options={options}/>
+            <table class="table table-dark stripe hover" id="example">
+              <thead>
+                
+                <tr>
+                  <th data-priority="1">Currency</th>
+                  <th data-priority="2">rate_float</th>
+                  <th data-priority="3">code</th>
+                  <th data-priority="4">symbol</th>
+                  <th data-priority="5">description</th>
+                  <th data-priority="6">symbol</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>USD</td>
+                  <td>{data.datasets[0].data[0]}</td>
+                  <td>{data.datasets[0].code[0]}</td>
+                  <td>{data.datasets[0].symbol[0]}</td>
+                  <td>{data.datasets[0].description[0]}</td>
+                  <td>{data.datasets[0].symbol[0]}</td>
+                </tr>
+                <tr>
+                  <td>GBP</td>
+                  <td>{data.datasets[0].data[1]}</td>
+                  <td>{data.datasets[0].code[1]}</td>
+                  <td>{data.datasets[0].symbol[1]}</td>
+                  <td>{data.datasets[0].description[1]}</td>
+                  <td>{data.datasets[0].symbol[1]}</td>
+                </tr>
+                <tr>
+                  <td>EUR</td>
+                  <td>{data.datasets[0].data[2]}</td>
+                  <td>{data.datasets[0].code[2]}</td>
+                  <td>{data.datasets[0].symbol[2]}</td>
+                  <td>{data.datasets[0].description[2]}</td>
+                  <td>{data.datasets[0].symbol[1]}</td>
+                </tr>
+
+              </tbody>
+            </table>
             <div>
-              <ul>
-                <h1>{data.labels[0]}</h1>
-                <h2>{data.datasets[0].data[0]}</h2>
-                <h1>{data.labels[1]}</h1>
-                <h2>{data.datasets[0].data[1]}</h2>
-                <h1>{data.labels[2]}</h1>
-                <h2>{data.datasets[0].data[2]}</h2>
-              </ul>
+              <span>USD</span><button onClick={() => myFunction('Demo1')} class="w3-btn w3-block w3-black w3-left-align">Details</button>
             </div>
-         </div>)
+            <div id="Demo1" class="w3-container w3-hide">
+              <h4>{data.labels[0] + " " + data.datasets[0].data[0]}</h4>
+  
+            </div>
+            <br></br>
+            <div>
+              <span>GBP</span><button onClick={() => myFunction('Demo2')} class="w3-btn w3-block w3-black w3-left-align">Details</button>
+            </div>
+            <div id="Demo2" class="w3-container w3-hide">
+              <h4>{data.labels[1] + " " + data.datasets[0].data[1]}</h4>
+  
+            </div>
+            <br></br>
+            <div>
+              <span>EUR</span><button onClick={() => myFunction('Demo3')} class="w3-btn w3-block w3-black w3-left-align">Details</button>
+            </div>
+            <div id="Demo3" class="w3-container w3-hide">
+              <h4>{data.labels[2] + " " + data.datasets[0].data[2]}</h4>
+  
+            </div>
+          </div>
+        </div>
+        )
 }
 export default Horizontalchart;
