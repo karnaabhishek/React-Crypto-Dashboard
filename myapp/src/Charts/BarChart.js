@@ -39,13 +39,13 @@ const options = {
 
 const Horizontalchart =() => {
     const [data, setData] = useState({
-        labels:['USD','GBP', 'EUR'],
+        labels:[],
         datasets: [
           {
-            label: ['', "", ""],
+            label: [],
             data:[],
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(25, 90, 13, 0.5)',
+            borderColor: [],
+            backgroundColor: [],
           },
           
         ],
@@ -56,7 +56,8 @@ const Horizontalchart =() => {
            
            const dataSet1 = [];
            const dataSet2 = [];
-           const dataSet3 = [];
+           const dataSet3 = []; 
+
          await fetch(url).then((data)=> {
              console.log("Api data", data)
              const res = data.json();
@@ -66,14 +67,17 @@ const Horizontalchart =() => {
              dataSet1.push(res.bpi.USD.rate_float)
              dataSet2.push(res.bpi.GBP.rate_float)
              dataSet3.push(res.bpi.EUR.rate_float)
+             
+             var keys=Object.keys(res.bpi);
+             
             setData({
-                labels:['USD','GBP', 'EUR'],
+                labels: keys,
                 datasets: [
                   {
-                    label: ['Dataset1', 'Dataset2', 'Dataset3'],
+                    label: "Dataset",
                     data:[dataSet1, dataSet2, dataSet3],
-                    borderColor: ['rgb(255, 99, 132)', 'rgb(100, 99, 212)', 'rgb(50, 99, 132)'], 
-                    backgroundColor: ['rgb(255, 99, 132)', 'rgb(100, 99, 212)', 'rgb(50, 99, 132)'],
+                    borderColor: 'rgb(255, 99, 132)', 
+                    backgroundColor: 'rgb(255, 99, 132)',
                   },
                   
                 ],
@@ -89,10 +93,17 @@ const Horizontalchart =() => {
    
     return(
         <div style={{width:'80%', height:'50%'}}>
-            {
-                console.log("dataaaaaaaa", data)
-            }
             <Bar data={data} options={options}/>
+            <div>
+              <ul>
+                <h1>{data.labels[0]}</h1>
+                <h2>{data.datasets[0].data[0]}</h2>
+                <h1>{data.labels[1]}</h1>
+                <h2>{data.datasets[0].data[1]}</h2>
+                <h1>{data.labels[2]}</h1>
+                <h2>{data.datasets[0].data[2]}</h2>
+              </ul>
+            </div>
          </div>)
 }
 export default Horizontalchart;
