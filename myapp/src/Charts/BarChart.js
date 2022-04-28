@@ -1,4 +1,6 @@
 import {useEffect, useState} from 'react';
+import Table from './Table';
+import { Link } from "react-router-dom";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -41,9 +43,9 @@ const options = {
 function myFunction(id) {
     var x = document.getElementById(id);
     if (x.className.indexOf("w3-show") === -1) {
-      x.className += " w3-show";
+      x.className += "w3-show";
     } else { 
-      x.className = x.className.replace(" w3-show", "");
+      x.className = x.className.replace("w3-show", "");
     }
   }
 const Horizontalchart =() => {
@@ -121,46 +123,7 @@ const Horizontalchart =() => {
           <div style={{width:'50%', height:'100%', margin: 'auto'}}>
             
             <Bar data={data} options={options}/>
-            <table class="table table-dark stripe hover" id="example">
-              <thead>
-                
-                <tr>
-                  <th data-priority="1">Currency</th>
-                  <th data-priority="2">rate_float</th>
-                  <th data-priority="3">code</th>
-                  <th data-priority="4">symbol</th>
-                  <th data-priority="5">description</th>
-                  <th data-priority="6">symbol</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>USD</td>
-                  <td>{data.datasets[0].data[0]}</td>
-                  <td>{data.datasets[0].code[0]}</td>
-                  <td>{data.datasets[0].symbol[0]}</td>
-                  <td>{data.datasets[0].description[0]}</td>
-                  <td>{data.datasets[0].symbol[0]}</td>
-                </tr>
-                <tr>
-                  <td>GBP</td>
-                  <td>{data.datasets[0].data[1]}</td>
-                  <td>{data.datasets[0].code[1]}</td>
-                  <td>{data.datasets[0].symbol[1]}</td>
-                  <td>{data.datasets[0].description[1]}</td>
-                  <td>{data.datasets[0].symbol[1]}</td>
-                </tr>
-                <tr>
-                  <td>EUR</td>
-                  <td>{data.datasets[0].data[2]}</td>
-                  <td>{data.datasets[0].code[2]}</td>
-                  <td>{data.datasets[0].symbol[2]}</td>
-                  <td>{data.datasets[0].description[2]}</td>
-                  <td>{data.datasets[0].symbol[1]}</td>
-                </tr>
-
-              </tbody>
-            </table>
+            <Table data = {data}/>
             <div>
               <span>USD</span><button onClick={() => myFunction('Demo1')} class="w3-btn w3-block w3-black w3-left-align">Details</button>
             </div>
@@ -184,6 +147,7 @@ const Horizontalchart =() => {
               <h4>{data.labels[2] + " " + data.datasets[0].data[2]}</h4>
   
             </div>
+            <Link to="/about">About</Link>
           </div>
         </div>
         )
